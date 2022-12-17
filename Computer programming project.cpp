@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
 #include <filesystem>
+#include <vector>
 
 using namespace std;
 namespace fs = std::filesystem;
@@ -80,7 +81,7 @@ int loginfunction() {
 
 }
 
-void listsongs() {
+void listsongs(vector <string>& songs) {
 
 	string path;
 	cout << "\n\nselect your music folder using path: ";
@@ -100,6 +101,7 @@ void listsongs() {
 		string ext = item.substr(item.find_last_of(".\\"));
 		if (ext == ".zip" || ext == ".7z" || ext == ".rar") {
 			cout << endl << item << endl;
+			songs.push_back(entry.path().string());
 		}
 
 	}
@@ -108,12 +110,22 @@ void listsongs() {
 
 
 int main() {
+	vector<string> songs;
+	/*____________________________ LOGIN FUNTION _______________________________*/
 
-	/*____________________________ LOGIN FUNTION _____________________________*/
 	int user = loginfunction();
-	/*____________________________ LIST SONGS _____________________________*/
-	listsongs();
-	///*____________________________ LIST SONGS 2_____________________________*/
+
+	/*____________________________ LIST SONGS _______________________________*/
+
+	listsongs(songs);
+
+	/*______________________________ SAVE PATHS___________________________*/
+
+
+	cout << "Output of vector:\n\n ";
+	for (int i = 0; i < songs.size(); ++i) {
+		cout << songs[i] << " " << endl;
+	}
 
 
 }

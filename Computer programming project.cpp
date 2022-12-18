@@ -2,6 +2,15 @@
 #include <iostream>
 #include <filesystem>
 #include <vector>
+#include <cstdlib>
+#include <windows.h>
+#include <ctime>
+#include <conio.h>
+#include <fstream>
+#include <sstream>
+#include <iomanip>
+#include <algorithm>
+#pragma comment(lib, "Winmm.lib")
 
 using namespace std;
 namespace fs = std::filesystem;
@@ -31,9 +40,9 @@ int loginfunction() {
 
 		attempts++;
 
-		cout << "\nenter username" << endl;
+		cout << "\nenter username: ";
 		cin >> userenter;
-		cout << "enter password" << endl;
+		cout << "enter password: ";
 		cin >> passenter;
 
 
@@ -99,7 +108,7 @@ void listsongs(vector <string>& songs) {
 		}
 
 		string ext = item.substr(item.find_last_of(".\\"));
-		if (ext == ".zip" || ext == ".7z" || ext == ".rar") {
+		if (ext == ".wav") {
 			cout << endl << item << endl;
 			songs.push_back(entry.path().string());
 		}
@@ -119,14 +128,114 @@ int main() {
 
 	listsongs(songs);
 
-	/*______________________________ SAVE PATHS___________________________*/
+	/*______________________________ PATHS___________________________*/
+
+	//add a second backslash to all paths to avoid errors
+
+	for (int i = 0; i < songs.size(); i++) {
+		for (int j = 0; j < songs[i].size(); j++) {
+			if (songs[i][j] == '\\') {
+				songs[i].insert(j, "\\");
+				j++;
+			}
+		}
+	}
 
 
-	cout << "Output of vector:\n\n ";
+
+	/*cout << "Output of vector:\n\n ";
 	for (int i = 0; i < songs.size(); ++i) {
 		cout << songs[i] << " " << endl;
 	}
 
+	cout << "AND SIZE IS..." << songs.size() << endl;*/
 
+	/*______________________________CHOOSE SONG___________________________*/
+
+	int songnum;
+	cout << "\n\nenter song number: ";
+	cin >> songnum;
+
+	if (songnum > songs.size()) {
+		cout << "song number not found, track 1 chosen";
+		songnum = 1;
+	}
+
+	songnum = songnum - 1;
+
+	string song = songs[songnum];
+
+	int n;
+
+	cout << "YOU CHOSE :   " << TEXT(song.c_str());
+
+
+
+
+	/*------------------------------------------CONTROLS---------------------------------------------*/
+
+	//play, pause, replay from the time you paused, next song, previous song and exit using playsound. reset to inex 0 if you leave the range of vector
+
+	cout << "\n\n\n\n" << " 1- play the song \n 2- stop the song \n 3- ERROR - WIP \n 4- next song \n 5- previous song \n 6- exit \n\n" << endl;
+	cout << "enter your choice: ";
+	cin >> n;
+
+	while (n != 6) {
+
+		if (n == 1) {
+			PlaySound(TEXT(song.c_str()), NULL, SND_ASYNC);
+			cout << " 1- play the song \n 2- stop the song \n 3- ERROR - WIP \n 4- next song \n 5- previous song \n 6- exit \n\n" << endl;
+			cout << "enter your choice: ";
+			cin >> n;
+		}
+
+		if (n == 2) {
+			PlaySound(NULL, NULL, SND_ASYNC);
+			cout << " 1- play the song \n 2- stop the song \n 3- ERROR - WIP \n 4- next song \n 5- previous song \n 6- exit \n\n" << endl;
+			cout << "enter your choice: ";
+			cin >> n;
+		}
+
+		if (n == 3) {
+			PlaySound(TEXT(song.c_str()), NULL, SND_ASYNC);
+			cout << " 1- play the song \n 2- stop the song \n 3- ERROR - WIP \n 4- next song \n 5- previous song \n 6- exit \n\n" << endl;
+			cout << "enter your choice: ";
+			cin >> n;
+		}
+
+		if (n == 4) {
+			songnum = songnum + 1;
+			if (songnum >= songs.size()) {
+				cout << "song number not found, track 1 chosen";
+				songnum = 0;
+			}
+			song = songs[songnum];
+			PlaySound(TEXT(song.c_str()), NULL, SND_ASYNC);
+			cout << " 1- play the song \n 2- stop the song \n 3- ERROR - WIP \n 4- next song \n 5- previous song \n 6- exit \n\n" << endl
+				<< endl << TEXT(song.c_str()) << endl;
+			cout << "enter your choice: ";
+			cin >> n;
+		}
+
+		if (n == 5) {
+			songnum = songnum - 1;
+			if (songnum < 0) {
+				cout << "song number not found, last track chosen";
+				songnum = songs.size() - 1;
+			}
+			song = songs[songnum];
+			PlaySound(TEXT(song.c_str()), NULL, SND_ASYNC);
+			cout << " 1- play the song \n 2- stop the song \n 3- ERROR - WIP \n 4- next song \n 5- previous song \n 6- exit \n\n" << endl
+				<< endl << TEXT(song.c_str()) << endl;
+			cout << "enter your choice: ";
+			cin >> n;
+		}
+	}
+
+
+
+	return 0;
 }
+
+
 

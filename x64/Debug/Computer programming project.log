@@ -1,4 +1,1 @@
-﻿  Computer programming project.cpp
-D:\Dev_portfolio\Gits\Computer-Programming-Project\Computer programming project.cpp(224,31): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-D:\Dev_portfolio\Gits\Computer-Programming-Project\Computer programming project.cpp(91): warning C4715: 'loginfunction': not all control paths return a value
-  Computer programming project.vcxproj -> D:\Dev_portfolio\Gits\Computer-Programming-Project\x64\Debug\Computer programming project.exe
+﻿  Computer programming project.vcxproj -> C:\Users\Maz\Documents\GitHub\Computer-Programming-Project\x64\Debug\Computer programming project.exe

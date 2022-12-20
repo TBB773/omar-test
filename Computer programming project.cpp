@@ -5,12 +5,10 @@
 #include <cstdlib>
 #include <windows.h>
 #include <ctime>
-#include <conio.h>
-#include <fstream>
-#include <sstream>
-#include <iomanip>
-#include <algorithm>
-#pragma comment(lib, "Winmm.lib")
+#include <cstdlib>
+#include <winuser.h>
+#pragma comment( lib, "winmm.lib" )
+using namespace std;
 
 using namespace std;
 namespace fs = std::filesystem;
@@ -108,7 +106,7 @@ void listsongs(vector <string>& songs) {
 		}
 
 		string ext = item.substr(item.find_last_of(".\\"));
-		if (ext == ".wav") {
+		if (ext == ".wav" || ext == ".mp3") {
 			cout << endl << item << endl;
 			songs.push_back(entry.path().string());
 		}
@@ -116,10 +114,26 @@ void listsongs(vector <string>& songs) {
 	}
 }
 
+string mcicommand(string path) {
+
+	string command = "open type mpegvideo alias song";
+
+	int found = command.find(" ");
+
+	command = command.substr(0, found) + " " + path + command.substr(found);
+
+	return command;
+
+}
+
 
 
 int main() {
+	/*--------------------------------- APETIZERS --------------------------------*/
 	vector<string> songs;
+	int controller;
+	string command;
+	time_t t1{}, t2, previous_pause_time = 0;
 	/*____________________________ LOGIN FUNTION _______________________________*/
 
 	int user = loginfunction();
@@ -132,23 +146,13 @@ int main() {
 
 	//add a second backslash to all paths to avoid errors
 
-	for (int i = 0; i < songs.size(); i++) {
-		for (int j = 0; j < songs[i].size(); j++) {
-			if (songs[i][j] == '\\') {
-				songs[i].insert(j, "\\");
-				j++;
-			}
-		}
-	}
 
-
-
-	/*cout << "Output of vector:\n\n ";
+	cout << "Output of vector:\n\n";
 	for (int i = 0; i < songs.size(); ++i) {
 		cout << songs[i] << " " << endl;
 	}
 
-	cout << "AND SIZE IS..." << songs.size() << endl;*/
+	cout << "AND SIZE IS..." << songs.size() << endl;
 
 	/*______________________________CHOOSE SONG___________________________*/
 
@@ -165,77 +169,77 @@ int main() {
 
 	string song = songs[songnum];
 
-	int n;
 
-	cout << "YOU CHOSE :   " << TEXT(song.c_str());
+	cout << "YOU CHOSE :   " << TEXT(song.c_str()) << endl;
+
+	/*------------------------------PATH TO COMMAND--------------------------*/
 
 
+	command = mcicommand(song);
+	cout << command;
 
 
 	/*------------------------------------------CONTROLS---------------------------------------------*/
 
-	//play, pause, replay from the time you paused, next song, previous song and exit using playsound. reset to inex 0 if you leave the range of vector
+	mciSendString(command.c_str(), NULL, 0, NULL);
 
-	cout << "\n\n\n\n" << " 1- play the song \n 2- stop the song \n 3- ERROR - WIP \n 4- next song \n 5- previous song \n 6- exit \n\n" << endl;
-	cout << "enter your choice: ";
-	cin >> n;
 
-	while (n != 6) {
+	while (true) {
+		cout << "\n\n\n\n" << " 1- play\n 2- stop\n 3- pause \n 4- resume \n 5- next \n 6- previous \n 7-Exit \n\n\n" << endl;
+		cout << "enter your choice: ";
+		cin >> controller;
 
-		if (n == 1) {
-			PlaySound(TEXT(song.c_str()), NULL, SND_ASYNC);
-			cout << " 1- play the song \n 2- stop the song \n 3- ERROR - WIP \n 4- next song \n 5- previous song \n 6- exit \n\n" << endl;
-			cout << "enter your choice: ";
-			cin >> n;
-		}
-
-		if (n == 2) {
-			PlaySound(NULL, NULL, SND_ASYNC);
-			cout << " 1- play the song \n 2- stop the song \n 3- ERROR - WIP \n 4- next song \n 5- previous song \n 6- exit \n\n" << endl;
-			cout << "enter your choice: ";
-			cin >> n;
-		}
-
-		if (n == 3) {
-			PlaySound(TEXT(song.c_str()), NULL, SND_ASYNC);
-			cout << " 1- play the song \n 2- stop the song \n 3- ERROR - WIP \n 4- next song \n 5- previous song \n 6- exit \n\n" << endl;
-			cout << "enter your choice: ";
-			cin >> n;
-		}
-
-		if (n == 4) {
-			songnum = songnum + 1;
-			if (songnum >= songs.size()) {
-				cout << "song number not found, track 1 chosen";
+		switch (controller) {
+		case 1: //play
+			mciSendString("play song", NULL, 0, NULL);
+			t1 = time(nullptr);
+			break;
+		case 2: //stop
+			mciSendString("close song", NULL, 0, NULL);
+			mciSendString(command.c_str(), NULL, 0, NULL);
+			break;
+		case 3: //pause
+			mciSendString("pause song", NULL, 0, NULL);
+			t2 = time(nullptr);
+			previous_pause_time += t2 - t1;
+			break;
+		case 4: //resume
+			mciSendString("resume song", NULL, 0, NULL);
+			t1 = time(nullptr);
+			break;
+		case 5: //next
+			mciSendString("close song", NULL, 0, NULL);
+			songnum++;
+			if (songnum > songs.size() - 1) {
 				songnum = 0;
 			}
 			song = songs[songnum];
-			PlaySound(TEXT(song.c_str()), NULL, SND_ASYNC);
-			cout << " 1- play the song \n 2- stop the song \n 3- ERROR - WIP \n 4- next song \n 5- previous song \n 6- exit \n\n" << endl
-				<< endl << TEXT(song.c_str()) << endl;
-			cout << "enter your choice: ";
-			cin >> n;
-		}
-
-		if (n == 5) {
-			songnum = songnum - 1;
+			command = mcicommand(song);
+			mciSendString(command.c_str(), NULL, 0, NULL);
+			mciSendString("play song", NULL, 0, NULL);
+			break;
+		case 6: //previous
+			mciSendString("close song", NULL, 0, NULL);
+			songnum--;
 			if (songnum < 0) {
-				cout << "song number not found, last track chosen";
 				songnum = songs.size() - 1;
 			}
 			song = songs[songnum];
-			PlaySound(TEXT(song.c_str()), NULL, SND_ASYNC);
-			cout << " 1- play the song \n 2- stop the song \n 3- ERROR - WIP \n 4- next song \n 5- previous song \n 6- exit \n\n" << endl
-				<< endl << TEXT(song.c_str()) << endl;
-			cout << "enter your choice: ";
-			cin >> n;
+			command = mcicommand(song);
+			mciSendString(command.c_str(), NULL, 0, NULL);
+			mciSendString("play song", NULL, 0, NULL);
+			break;
+		case 7: //exit
+			mciSendString("close song", NULL, 0, NULL);
+			exit(0);
+			break;
+		default:
+			cout << "invalid choice, try again";
+			break;
 		}
+
 	}
 
 
 
-	return 0;
 }
-
-
-

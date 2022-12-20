@@ -30,7 +30,6 @@ int loginfunction() {
 			exit(0);
 		}
 
-
 		int locationuser = -1;
 		int locationpass = -1;
 
@@ -41,14 +40,12 @@ int loginfunction() {
 		cout << "enter password: ";
 		cin >> passenter;
 
-
 		for (int i = 0; i < 4; i++) {
 
 			if (userenter == users[i]) {
 				locationuser = i;
 			}
 		}
-
 
 		if (locationuser == -1) {
 			cout << "username or password incorrect." << endl;
@@ -61,7 +58,6 @@ int loginfunction() {
 				locationpass = i;
 			}
 		}
-
 
 		if (locationpass == -1) {
 			cout << "username or password incorrect." << endl;
@@ -79,8 +75,6 @@ int loginfunction() {
 			cout << "username or password incorrect." << endl;
 
 		}
-
-
 
 	}
 
@@ -124,7 +118,6 @@ void listplaylist(vector <string>& playlist, string extpath, int ipath, vector<s
 	vector<string> controller;
 	vector<string> additemlist;
 
-
 	if (ipath == 0) { //first initiliaztion making the playlist equal all the files in the original path you choose at the start of the program
 		listsongs(playlist, extpath, itemlist);
 	}
@@ -160,7 +153,6 @@ void listplaylist(vector <string>& playlist, string extpath, int ipath, vector<s
 
 				}
 				cout << "\n\n\n";
-
 				break;
 			case 2: //add a new track to the playlist
 				cout << "Pick the folder with tracks you wish to add" << endl;
@@ -180,7 +172,6 @@ void listplaylist(vector <string>& playlist, string extpath, int ipath, vector<s
 						additemlist.push_back(item);
 
 					}
-
 				}
 				cout << "current controller playlist" << endl;
 				for (int i = 0; i < additemlist.size(); i++) {
@@ -272,7 +263,6 @@ void listplaylist(vector <string>& playlist, string extpath, int ipath, vector<s
 			}
 		}
 	}
-
 }
 
 

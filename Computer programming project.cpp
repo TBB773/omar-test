@@ -356,7 +356,7 @@ int main() {
 
 
 	while (true) {
-		cout << "\n\n\n\n" << " 1- play\n 2- stop\n 3- pause \n 4- resume \n 5- next \n 6- previous \n 7- edit playlist \n 8- Exit \n\n\n" << endl;
+		cout << "\n\n\n\n" << " 1- play\n 2- stop\n 3- pause \n 4- resume \n 5- next \n 6- previous \n 7- edit playlist \n 8- show playlist \n 9- Exit \n\n\n" << endl;
 		cout << "enter your choice: ";
 		cin >> controller;
 
@@ -405,16 +405,19 @@ int main() {
 			listplaylist(playlist, ogpath, 1, itemlist);
 			break;
 
-		case 8: //exit
-			mciSendString("close song", NULL, 0, NULL);
-			exit(0);
-			break;
-		case 9:
+		case 8: //Show Playlist
 
 			for (int i = 0; i < itemlist.size(); i++) {
 				cout << i + 1 << "- " << itemlist[i] << endl;
 			}
 			break;
+
+		case 9: //exit
+
+			mciSendString("close song", NULL, 0, NULL);
+			exit(0);
+			break;
+
 		default:
 			cout << "invalid choice, try again";
 			break;

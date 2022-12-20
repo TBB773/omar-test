@@ -1,1 +1,12 @@
-﻿  Computer programming project.vcxproj -> C:\Users\Maz\Documents\GitHub\Computer-Programming-Project\x64\Debug\Computer programming project.exe
+﻿  Computer programming project.cpp
+<<<<<<< Updated upstream
+C:\Users\Maz\Documents\GitHub\Computer-Programming-Project\Computer programming project.cpp(121,31): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Maz\Documents\GitHub\Computer-Programming-Project\Computer programming project.cpp(225,31): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Maz\Documents\GitHub\Computer-Programming-Project\Computer programming project.cpp(89): warning C4715: 'loginfunction': not all control paths return a value
+  Computer programming project.vcxproj -> C:\Users\Maz\Documents\GitHub\Computer-Programming-Project\x64\Debug\Computer programming project.exe
+=======
+F:\Projects\Programming\CESS\Computer-Programming-Project\Computer programming project.cpp(121,31): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+F:\Projects\Programming\CESS\Computer-Programming-Project\Computer programming project.cpp(225,31): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+F:\Projects\Programming\CESS\Computer-Programming-Project\Computer programming project.cpp(89): warning C4715: 'loginfunction': not all control paths return a value
+  Computer programming project.vcxproj -> F:\Projects\Programming\CESS\Computer-Programming-Project\x64\Debug\Computer programming project.exe
+>>>>>>> Stashed changes

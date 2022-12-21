@@ -193,15 +193,17 @@ void listplaylist(vector <string>& playlist, string extpath, int ipath, vector<s
 						for (int i = 0; i < controller.size(); i++) {
 							playlist.push_back(controller[i]);
 							itemlist.push_back(additemlist[i]);
-							controller.clear();
-							additemlist.clear();
 
 						}
+
 						cout << "current controller playlist" << endl;
 						for (int i = 0; i < itemlist.size(); i++) {
 							cout << i + 1 << "- " << itemlist[i] << endl;
-
 						}
+
+						controller.clear();
+						additemlist.clear();
+
 						break;
 					case 2: //this will add one song to the list 
 						cout << "Pick a song to add to the playlist" << endl;

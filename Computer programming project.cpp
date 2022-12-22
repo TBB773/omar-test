@@ -11,11 +11,6 @@ using namespace std;
 namespace fs = std::filesystem;
 
 namespace fywauv {
-#include <iostream>
-#include <string>
-#include <windows.h>
-#include <cstdlib>
-
 
 
 	//a class that imitates a vector for strings using a dynamic array with push, pop, size, delete clear and print functions because the vector library isn't allowed :/

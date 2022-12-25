@@ -468,7 +468,7 @@ string mcicommand(string path, string voc, string volume) {
 
 		int found = command.find(" "); //finds the first space in the template
 
-		command = command.substr(0, found) + " \"" + path + "\" " + command.substr(found); //adds the stuff before the first space then the path after the first space then second space then everything after that second space
+		command = command.substr(0, found) + " \"" + path + "\"" + command.substr(found); //adds the stuff before the first space then the path after the first space then second space then everything after that second space
 
 		return command; //returns the command which we will use in mcisend string
 	}

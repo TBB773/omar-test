@@ -20,7 +20,6 @@ namespace fywauv {
 		std::string* array;
 		int size;
 		int capacity;
-		
 
 	public:
 		//constructor that creates an empty dynamic array of size 0
@@ -188,16 +187,10 @@ int loginfunction() { //simple login function
 
 		attempts++;
 
-		cout << "\nPlease enter your username: "; //spaces are allowed, save them in the variable
-		getline(cin, userenter);
-		
-		cout << "\nPlease enter your password: ";
-		getline(cin, passenter);
-		
-		
-		
-
-		
+		cout << "\nenter username: ";  //these two asks for the input of the username and password
+		cin >> userenter;
+		cout << "enter password: ";
+		cin >> passenter;
 
 		for (int i = 0; i < 4; i++) { //this loop checks if the password exists in the "users" array if it does exist it will take it's location and equal it to locationuser for later use to confirm if the password entered is that of the same user
 
@@ -478,7 +471,6 @@ string mcicommand(string path, string voc, string volume) {
 	*/
 
 	if (voc == "c") {
-		
 		string command = "open type mpegvideo alias song"; //the template for the open command we will use
 
 		int found = command.find(" "); //finds the first space in the template
@@ -523,21 +515,15 @@ int main() {
 	stringstream iv;
 	string command;
 	time_t t1{}, t2{}, previous_pause_time = 0; //this is a timer saver for when we pause a song
-	float tempvolume;
-	string search;
-	string search2;
-	fywauv::vector playlist;  //the playlist including all the paths to the songs we use
-	fywauv::vector itemlist; //the itemlist which includes all the song names we use
-	fywauv::vector searchlist;
-	int searchnum;
-	bool searchcontroller = true;
+
 	/*_________________________________ LOGIN FUNTION _________________________________*/
 
 	int user = loginfunction(); //starts the login function
 
 	/*_______________________________ LIST SONGS __________________________________*/
 
-
+	fywauv::vector playlist;  //the playlist including all the paths to the songs we use
+	fywauv::vector itemlist; //the itemlist which includes all the song names we use
 	string ogpath;
 	cout << "\n\nselect your music folder using path: ";
 	cin >> ogpath; //asks for the first path to the starting folder
@@ -610,7 +596,7 @@ int main() {
 
 		//an infinite function that has one exit, this function will be the responsible to full controls of the program
 
-		cout << "\n\n\n\n" << " 1-  Play\n 2-  Stop\n 3-  Volume Controls \n 4-  Pause \n 5-  Resume \n 6-  Next \n 7-  Previous \n 8-  Edit Playlist \n 9-  Show playlist \n 10- Exit \n11- Search \n\n\n" << endl;
+		cout << "\n\n\n\n" << " 1-  Play\n 2-  Stop\n 3-  Volume Controls \n 4-  Pause \n 5-  Resume \n 6-  Next \n 7-  Previous \n 8-  Edit Playlist \n 9-  Show playlist \n 10- Exit \n\n\n" << endl;
 		cout << "enter your choice: ";
 		cin >> controller; //chooses which switch case we will be running
 
@@ -649,10 +635,9 @@ int main() {
 				switch (vcontroller) {
 
 				case 1:
-					cout << "enter your desire volume from 0 to 10, default value 5\n";
-					cin >> tempvolume; //takes in the value of the volume as a float
-					intvolume = tempvolume * 100;
-					volume = to_string(intvolume); //this makes the value from an int to a string after multyplying it to 100 so it is balanced of the range of 0 to 1000
+					cout << "enter your desire volume from 1 to 10, default value 5\n";
+					cin >> intvolume; //takes in the value of the volume as an intger 
+					volume = to_string(intvolume * 100); //this makes the value from an int to a string after multyplying it to 100 so it is balanced of the range of 0 to 1000
 					cout << "volume = " << volume << endl; //debug to show the current volume
 					command = mcicommand(song, "v", volume); //send the volume value to the command function to return us a new command to use in mcisendstring
 					mciSendString(command.c_str(), NULL, 0, NULL);
@@ -745,39 +730,6 @@ int main() {
 			exit(0);
 			break;
 
-		case 11:
-			//search for song in playlist.
-			cout << "Enter the name of the song you want to search for: ";
-			//search with spaces!
-			cin.ignore();
-			getline(cin, search);
-			for (int i = 0; i < itemlist.getsize(); i++) {
-				//if multiple are found, it will show all of them. and let us pick.
-				if (itemlist.get(i).find(search) != string::npos) {
-					cout << i + 1 << "- " << itemlist.get(i) << endl;
-					searchlist.push(itemlist.get(i));
-					//select item from search list and play it
-				}
-			}
-			
-			if (searchlist.getsize() == 0) {
-				cout << "No songs found" << endl;
-			}
-			
-			else {
-				cout << "Enter the number of the song you want to play: ";
-				cin >> searchnum;
-				mciSendString("close song", NULL, 0, NULL);
-				songnum = searchnum - 1;
-				song = playlist.get(songnum);
-				command = mcicommand(song, "c", volume);
-				mciSendString(command.c_str(), NULL, 0, NULL);
-				mciSendString("play song", NULL, 0, NULL);
-				break;
-			}
-
-			break;
-			
 		default:
 
 			//bug catcher for any value that isn't a number or a number that doesn't have a control in the switch case
@@ -787,4 +739,7 @@ int main() {
 		}
 
 	}
+
+
+
 }

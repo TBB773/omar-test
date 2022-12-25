@@ -394,9 +394,13 @@ void listplaylist(fywauv::vector& playlist, string extpath, int ipath, fywauv::v
 						break;
 
 
-					case 3:
+					case 3: //exits the loop
 						whilecontroller = false;
 						break;
+
+					default:
+						cout << "invalid choice, try again" << endl;
+
 					}
 				}
 				controller.clear(); //clears the controller and additemlist vectors after being done running
@@ -427,13 +431,16 @@ void listplaylist(fywauv::vector& playlist, string extpath, int ipath, fywauv::v
 			case 4:
 				whilecontroller = false;
 				break;
+			default:
+				cout << "invalid choice, try again" << endl;
+
 			}
 		}
 	}
 }
 
 
-string mcicommand(string path) {
+string mcicommand(string path, string voc, string volume) {
 
 
 	//This was made by Mazen for further questions
@@ -452,15 +459,32 @@ string mcicommand(string path) {
 	* alias can be anything it is just a name so we know what this opened file is classified as, can be mp3 wav or as I choose song
 	* more stuff on the open function of mcisendtstring  https://learn.microsoft.com/en-us/windows/win32/multimedia/open
 	* -Mazen
+	*
+	* I added the volume command to this function too taking voc as in vollume or command value to decide which value it will output, and then the volume as a string
 	*/
 
-	string command = "open type mpegvideo alias song"; //the template for the open command we will use
+	if (voc == "c") {
+		string command = "open type mpegvideo alias song"; //the template for the open command we will use
 
-	int found = command.find(" "); //finds the first space in the template
+		int found = command.find(" "); //finds the first space in the template
 
-	command = command.substr(0, found) + " " + path + command.substr(found); //adds the stuff before the first space then the path after the first space then second space then everything after that second space
+		command = command.substr(0, found) + " " + path + command.substr(found); //adds the stuff before the first space then the path after the first space then second space then everything after that second space
 
-	return command; //returns the command which we will use in mcisend string
+		return command; //returns the command which we will use in mcisend string
+	}
+
+	if (voc == "v") {
+
+		string command = "setaudio song volume to "; //same as the one before just with a different command string
+
+		int found = command.find_last_of(" ");
+		command = command.substr(0, found) + " " + volume;
+
+		cout << command << endl;
+		return command;
+	}
+
+
 
 }
 
@@ -477,6 +501,11 @@ int main() {
 	/*------------------------------------------ APETIZERS ------------------------------------------*/
 
 	int controller;
+	int vcontroller;
+	bool wcontroller = true;
+	string volume;
+	int intvolume;
+	stringstream iv;
 	string command;
 	time_t t1{}, t2{}, previous_pause_time = 0; //this is a timer saver for when we pause a song
 
@@ -543,7 +572,7 @@ int main() {
 	* this is the first time initiliazing the command function in int main() with the song you choose to be the first one to run
 	*/
 
-	command = mcicommand(song);
+	command = mcicommand(song, "c", "500");
 	cout << command;
 
 
@@ -560,9 +589,10 @@ int main() {
 
 		//an infinite function that has one exit, this function will be the responsible to full controls of the program
 
-		cout << "\n\n\n\n" << " 1- play\n 2- stop\n 3- pause \n 4- resume \n 5- next \n 6- previous \n 7- edit playlist \n 8- show playlist \n 9- Exit \n\n\n" << endl;
+		cout << "\n\n\n\n" << " 1-  Play\n 2-  Stop\n 3-  Volume Controls \n 4-  Pause \n 5-  Resume \n 6-  Next \n 7-  Previous \n 8-  Edit Playlist \n 9-  Show playlist \n 10- Exit \n\n\n" << endl;
 		cout << "enter your choice: ";
 		cin >> controller; //chooses which switch case we will be running
+
 
 		switch (controller) {
 		case 1: //play
@@ -580,7 +610,45 @@ int main() {
 			mciSendString("close song", NULL, 0, NULL); //closes the song
 			mciSendString(command.c_str(), NULL, 0, NULL); //opens it from the start with the command function
 			break;
-		case 3: //pause
+		case 3: //controls the volume
+
+			/*
+			* this will be the case responsible of controlling the volume using the setaudo volume to function of mcisendstring
+			* the command for it is "setaudio" then the alias of the file playing "volume to" then the level of the volume you want to add
+			* note that the volume ranges only from 0 to 1000 with the default value being 500
+			*/
+
+			while (wcontroller) {
+				cout << "\n 1- Control volume\n 2- Exit Volume Controls\n";
+				cin >> vcontroller;
+				switch (vcontroller) {
+
+				case 1:
+					cout << "enter your desire volume from 1 to 10, default value 5\n";
+					cin >> intvolume; //takes in the value of the volume as an intger 
+					volume = to_string(intvolume * 100); //this makes the value from an int to a string after multyplying it to 100 so it is balanced of the range of 0 to 1000
+					cout << "volume = " << volume << endl; //debug to show the current volume
+					command = mcicommand(song, "v", volume); //send the volume value to the command function to return us a new command to use in mcisendstring
+					mciSendString(command.c_str(), NULL, 0, NULL);
+					command = mcicommand(song, "c", volume); //returns the command value to that of playing songs because we use it a lot everywhere else
+					break;
+
+				case 2:
+					wcontroller = false;
+					break;
+
+				default:
+					cout << "invalid choice, try again" << endl;
+					break;
+
+				}
+
+			}
+			wcontroller = true;
+			break;
+
+
+		case 4: //pause
 
 			//uses the mcisendstring command pause to pause the song
 
@@ -588,14 +656,14 @@ int main() {
 			t2 = time(nullptr);
 			previous_pause_time += t2 - t1;
 			break;
-		case 4: //resume
+		case 5: //resume
 
 			//uses the mcisendstring command resume to resume the song
 
 			mciSendString("resume song", NULL, 0, NULL);
 			t1 = time(nullptr);
 			break;
-		case 5: //next
+		case 6: //next
 
 			/*
 			* this is more complicated than just using a next function in mcisendstring, since when you use it, it works with one song at a time
@@ -609,11 +677,11 @@ int main() {
 				songnum = 0;
 			}
 			song = playlist.get(songnum); //this changes song which is a value holding a path from the old song to the path of the new song
-			command = mcicommand(song); //send back the new path to the function command to make us the new command to use in mcisend string
+			command = mcicommand(song, "c", volume); //send back the new path to the function command to make us the new command to use in mcisend string
 			mciSendString(command.c_str(), NULL, 0, NULL); //opens the new song using the command made in the previous line
 			mciSendString("play song", NULL, 0, NULL); //starts playing the new song
 			break;
-		case 6: //previous
+		case 7: //previous
 
 			//same as next but in reverse, not rewriting all of that again fight me -Mazen
 
@@ -623,18 +691,18 @@ int main() {
 				songnum = playlist.getsize() - 1;
 			}
 			song = playlist.get(songnum);
-			command = mcicommand(song);
+			command = mcicommand(song, "c", volume);
 			mciSendString(command.c_str(), NULL, 0, NULL);
 			mciSendString("play song", NULL, 0, NULL);
 			break;
-		case 7: //Playlist control
+		case 8: //Playlist control
 
 			//this starts the playlist controls function with a value of 1 in ipath to run the controls rather than the first initliazation
 
 			listplaylist(playlist, ogpath, 1, itemlist);
 			break;
 
-		case 8: //Show Playlist
+		case 9: //Show Playlist
 
 			//read the titel :D
 
@@ -643,7 +711,7 @@ int main() {
 			}
 			break;
 
-		case 9: //exit
+		case 10: //exit
 
 			//exits the program
 
@@ -655,7 +723,7 @@ int main() {
 
 			//bug catcher for any value that isn't a number or a number that doesn't have a control in the switch case
 
-			cout << "invalid choice, try again";
+			cout << "invalid choice, try again" << endl;
 			break;
 		}
 

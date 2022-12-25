@@ -227,7 +227,6 @@ int loginfunction() { //simple login function
 
 void listsongs(fywauv::vector& songs, string path, fywauv::vector& itemlist) { //this function is very important, it is the function we use to read the files in the folders
 
-
 	//This was made by Ahmed for further questions but I will be writing the commends to explain it here for now -Mazen
 
 	/*
@@ -278,6 +277,7 @@ void listplaylist(fywauv::vector& playlist, string extpath, int ipath, fywauv::v
 	*/
 
 	/*------------------------------------------ APETIZERS ------------------------------------------*/
+
 
 	char dot = '.';
 	int count = 1;
@@ -468,7 +468,7 @@ string mcicommand(string path, string voc, string volume) {
 
 		int found = command.find(" "); //finds the first space in the template
 
-		command = command.substr(0, found) + " " + path + command.substr(found); //adds the stuff before the first space then the path after the first space then second space then everything after that second space
+		command = command.substr(0, found) + " \"" + path + "\" " + command.substr(found); //adds the stuff before the first space then the path after the first space then second space then everything after that second space
 
 		return command; //returns the command which we will use in mcisend string
 	}

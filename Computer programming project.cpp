@@ -43,13 +43,20 @@ namespace fywauv {
 				{
 					capacity = 1;
 				}
-				capacity = capacity * 2;
+				
 				std::string* newArray = new std::string[capacity];
 				for (int i = 0; i < size; i++)
 				{
 					newArray[i] = array[i];
 				}
-				array = newArray;
+				delete[] array;                                           //same as pop but in reverse, lol, lmao even. -Turnip
+				capacity = capacity * 2;
+				array = new std::string[capacity];
+				for (int i = 0; i < size; i++)
+				{
+					array[i] = newArray[i];
+				}
+				delete[] newArray;
 			}
 
 			//add the new string to the end of the array and increment the size
@@ -571,7 +578,7 @@ int main() {
 	/*
 	* this is the first time initiliazing the command function in int main() with the song you choose to be the first one to run
 	*/
-
+	
 	command = mcicommand(song, "c", "500");
 	cout << command;
 
@@ -602,6 +609,10 @@ int main() {
 
 			mciSendString("play song", NULL, 0, NULL);
 			t1 = time(nullptr);
+
+			cout << "Playing...: " << TEXT(song.c_str()) << endl;
+			cout << "Command used...:" << command << endl;
+			
 			break;
 		case 2: //stop
 

@@ -14,9 +14,9 @@ namespace fywauv {
 
 
 	//a class that imitates a vector for strings using a dynamic array with push, pop, size, delete clear and print functions because the vector library isn't allowed :/
-	class vector
+	struct vector
 	{
-		//class variables
+		//struct variables
 		std::string* array;
 		int size;
 		int capacity;

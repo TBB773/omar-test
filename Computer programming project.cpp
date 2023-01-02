@@ -225,7 +225,7 @@ int loginfunction() { //simple login function
 
 		if (locationuser == locationpass) { //this if statement ensure that the password entered is that of the user who logined in and not any password in the array
 
-			cout << "welcome!";
+			cout << "\n     welcome!";
 			return locationuser;
 			break;
 

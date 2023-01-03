@@ -10,7 +10,7 @@
 using namespace std;
 namespace fs = std::filesystem;
 
-namespace fywauv {
+namespace tum {
 
 
 	//a class that imitates a vector for strings using a dynamic array with push, pop, size, delete clear and print functions because the vector library isn't allowed :/
@@ -170,8 +170,8 @@ int loginfunction() { //simple login function
 
 
 	bool login = true;
-	string users[] = { "ahmed", "youssef", "omar", "mazen" }; //the two arrays where we have the passwords and usernames saved
-	string passwords[] = { "pass1", "pass2", "pass3", "pass4" };
+	string users[] = { "ahmed", "youssef", "omar", "mazen", "kareem" }; //the two arrays where we have the passwords and usernames saved
+	string passwords[] = { "pass1", "pass2", "pass3", "pass4" , "pass5" };
 	string passenter;
 	string userenter;
 	int attempts = 0;
@@ -239,7 +239,7 @@ int loginfunction() { //simple login function
 
 }
 
-void listsongs(fywauv::vector& songs, string path, fywauv::vector& itemlist) { //this function is very important, it is the function we use to read the files in the folders
+void listsongs(tum::vector& songs, string path, tum::vector& itemlist) { //this function is very important, it is the function we use to read the files in the folders
 
 	//This was made by Ahmed for further questions but I will be writing the commends to explain it here for now -Mazen
 
@@ -276,7 +276,7 @@ void listsongs(fywauv::vector& songs, string path, fywauv::vector& itemlist) { /
 }
 
 
-void listplaylist(fywauv::vector& playlist, string extpath, int ipath, fywauv::vector& itemlist) { //I will be using this to controll the playlist
+void listplaylist(tum::vector& playlist, string extpath, int ipath, tum::vector& itemlist) { //I will be using this to controll the playlist
 
 
 	//This was made by Mazen for further questions
@@ -300,8 +300,8 @@ void listplaylist(fywauv::vector& playlist, string extpath, int ipath, fywauv::v
 	bool whilecontroller = true; //this bool value will be used to exist the while loops inside the playlist controller since I am too lazy to figure out how to break it otherwise
 	int switchcontroller;
 	string path;
-	fywauv::vector controller;
-	fywauv::vector additemlist;
+	tum::vector controller;
+	tum::vector additemlist;
 
 
 	/*________________________________The Playlist controller________________________________*/
@@ -526,9 +526,9 @@ int main() {
 	float tempvolume;
 	string search;
 	string search2;
-	fywauv::vector playlist;  //the playlist including all the paths to the songs we use
-	fywauv::vector itemlist; //the itemlist which includes all the song names we use
-	fywauv::vector searchlist;
+	tum::vector playlist;  //the playlist including all the paths to the songs we use
+	tum::vector itemlist; //the itemlist which includes all the song names we use
+	tum::vector searchlist;
 	int searchnum;
 	bool searchcontroller = true;
 	/*_________________________________ LOGIN FUNTION _________________________________*/
@@ -585,7 +585,7 @@ int main() {
 	string song = playlist.get(songnum);
 
 
-	cout << "YOU CHOSE :   " << TEXT(song.c_str()) << endl;
+	cout << "YOU CHOSE :   " << itemlist.get(songnum) << endl;
 
 	/*------------------------------PATH TO COMMAND--------------------------*/
 

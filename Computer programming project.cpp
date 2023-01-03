@@ -517,6 +517,7 @@ int main() {
 
 	int controller;
 	int vcontroller;
+	int seek;
 	bool wcontroller = true;
 	string volume;
 	int intvolume;
@@ -550,42 +551,40 @@ int main() {
 	listplaylist(playlist, ogpath, 0, itemlist); // we put 0 in the third parameter to use the first time initilization for the playlist
 
 
-
-	/*______________________________ PATHS___________________________*/
-
-	//add a second backslash to all paths to avoid errors (no longer needed but kept just incase will probably be replaced with the fix to the sapce issue)
-
-
-	cout << "Output of vector:\n\n";
-	for (int i = 0; i < playlist.getsize(); ++i) {
-		cout << playlist.get(i) << " " << endl;
-	}
-
-	cout << "AND SIZE IS..." << playlist.getsize() << endl;
-
 	/*______________________________CHOOSE SONG___________________________*/
 
 
 	/*
 	* this is the function for choosing which song to play first from the given playlist at the start
 	*/
-
-
 	int songnum;
-	cout << "\n\nenter song number: ";
-	cin >> songnum;
+	songnum = 1;
+	string song;
+	song = playlist.get(songnum);
 
-	if (songnum > playlist.getsize()) {
-		cout << "song number not found, track 1 chosen";
+	if (playlist.getsize() == 0) {
+		cout << "\n\nyou entered a path with no songs, entering the program with no playlist you can use edit playlist to add songs \n\n";
 		songnum = 1;
+
+	}
+	else {
+		cout << "\n\nenter song number: ";
+		cin >> songnum;
+
+		if (songnum > playlist.getsize()) {
+			cout << "song number not found, track 1 chosen";
+			songnum = 1;
+		}
+
+		songnum = songnum - 1;
+
+		song = playlist.get(songnum);
+
+
+		cout << "YOU CHOSE :   " << itemlist.get(songnum) << endl;
 	}
 
-	songnum = songnum - 1;
 
-	string song = playlist.get(songnum);
-
-
-	cout << "YOU CHOSE :   " << itemlist.get(songnum) << endl;
 
 	/*------------------------------PATH TO COMMAND--------------------------*/
 
@@ -594,7 +593,7 @@ int main() {
 	*/
 
 	command = mcicommand(song, "c", "500");
-	cout << command;
+
 
 
 	/*------------------------------------------CONTROLS---------------------------------------------*/
@@ -610,10 +609,10 @@ int main() {
 
 		//an infinite function that has one exit, this function will be the responsible to full controls of the program
 
-		cout << "\n\n\n\n" << " 1-  Play\n 2-  Stop \n 3-  Pause \n 4-  Resume \n 5-  Volume Controls \n 6-  Next \n 7-  Previous \n 8-  Edit Playlist \n 9-  Show playlist \n 10- Search \n 11- Exit \n\n\n" << endl;
+		cout << "\n\n\n\n" << " 1-  Play\n 2-  Stop \n 3-  Pause \n 4-  Resume \n 5-  Volume Controls \n 6-  Next \n 7-  Previous \n 8-  Edit Playlist \n 9-  Show playlist \n 10- Seek \n 11- Search \n 12- Exit \n\n\n" << endl;
 		cout << "enter your choice: ";
 		cin >> controller; //chooses which switch case we will be running
-
+		cout << "\n\n";
 
 		switch (controller) {
 		case 1: //play
@@ -744,7 +743,34 @@ int main() {
 			}
 			break;
 
-		case 10:
+
+		case 10: //Seek
+			while (wcontroller) {
+				for (int i = 0; i < itemlist.getsize(); i++) {
+					cout << i + 1 << "- " << itemlist.get(i) << endl;
+				}
+				cout << "Choose a song to jump to:  ";
+				cin >> seek;
+				if (seek > itemlist.getsize()) {
+					cout << "item doesn't exist in the playlist please try again\n\n";
+				}
+				else {
+					mciSendString("close song", NULL, 0, NULL); //first it closes the song we are playing right now
+					songnum = seek - 1; //second it changes the songnum value increasing it by one 
+					song = playlist.get(songnum); //this changes song which is a value holding a path from the old song to the path of the new song
+					command = mcicommand(song, "c", volume); //send back the new path to the function command to make us the new command to use in mcisend string
+					mciSendString(command.c_str(), NULL, 0, NULL); //opens the new song using the command made in the previous line
+					mciSendString("play song", NULL, 0, NULL); //starts playing the new song
+					wcontroller = false;
+					break;
+
+				}
+			}
+			wcontroller = true;
+			break;
+
+
+		case 11:
 			//search for song in playlist.
 			cout << "Enter the name of the song you want to search for: ";
 			//search with spaces!
@@ -777,7 +803,7 @@ int main() {
 
 			break;
 
-		case 11: //exit
+		case 12: //exit
 
 			//exits the program
 

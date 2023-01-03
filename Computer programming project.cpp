@@ -322,7 +322,7 @@ void listplaylist(tum::vector& playlist, string extpath, int ipath, tum::vector&
 				playlist.clear(); //this clears the two vectors playlist and itemlist
 				itemlist.clear();
 				cout << "enter the path to the new folder" << ":";
-				cin >> path;
+				getline(cin, path);
 				cout << "\n\n\n";
 				listsongs(playlist, path, itemlist); //this changes adds all the items in the new folder to the playlist
 				cout << "\n\n\n";
@@ -331,7 +331,7 @@ void listplaylist(tum::vector& playlist, string extpath, int ipath, tum::vector&
 
 			case 2: //add a new track to the playlist
 				cout << "Pick the folder with tracks you wish to add: ";
-				cin >> path;
+				getline(cin, path);
 				cout << "\n";
 
 				for (const auto& entry : fs::directory_iterator(path)) {
@@ -544,7 +544,7 @@ int main() {
 
 	string ogpath;
 	cout << "\n\nselect your music folder using path: ";
-	cin >> ogpath; //asks for the first path to the starting folder
+	getline(cin, ogpath); //asks for the first path to the starting folder
 	cout << endl;
 
 	/*_______________________ Playlist initilaization _______________________*/

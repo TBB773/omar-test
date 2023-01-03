@@ -610,7 +610,7 @@ int main() {
 
 		//an infinite function that has one exit, this function will be the responsible to full controls of the program
 
-		cout << "\n\n\n\n" << " 1-  Play\n 2-  Stop\n 3-  Volume Controls \n 4-  Pause \n 5-  Resume \n 6-  Next \n 7-  Previous \n 8-  Edit Playlist \n 9-  Show playlist \n 10- Exit \n11- Search \n\n\n" << endl;
+		cout << "\n\n\n\n" << " 1-  Play\n 2-  Stop \n 3-  Pause \n 4-  Resume \n 5-  Volume Controls \n 6-  Next \n 7-  Previous \n 8-  Edit Playlist \n 9-  Show playlist \n 10- Search \n 11- Exit \n\n\n" << endl;
 		cout << "enter your choice: ";
 		cin >> controller; //chooses which switch case we will be running
 
@@ -635,7 +635,23 @@ int main() {
 			mciSendString("close song", NULL, 0, NULL); //closes the song
 			mciSendString(command.c_str(), NULL, 0, NULL); //opens it from the start with the command function
 			break;
-		case 3: //controls the volume
+
+		case 3: //pause
+
+			//uses the mcisendstring command pause to pause the song
+
+			mciSendString("pause song", NULL, 0, NULL);
+			t2 = time(nullptr);
+			previous_pause_time += t2 - t1;
+			break;
+		case 4: //resume
+
+			//uses the mcisendstring command resume to resume the song
+
+			mciSendString("resume song", NULL, 0, NULL);
+			t1 = time(nullptr);
+			break;
+		case 5: //controls the volume
 
 			/*
 			* this will be the case responsible of controlling the volume using the setaudo volume to function of mcisendstring
@@ -651,13 +667,19 @@ int main() {
 				case 1:
 					cout << "enter your desire volume from 0 to 10, default value 5\n";
 					cin >> tempvolume; //takes in the value of the volume as a float
-					intvolume = tempvolume * 100;
-					volume = to_string(intvolume); //this makes the value from an int to a string after multyplying it to 100 so it is balanced of the range of 0 to 1000
-					cout << "volume = " << volume << endl; //debug to show the current volume
-					command = mcicommand(song, "v", volume); //send the volume value to the command function to return us a new command to use in mcisendstring
-					mciSendString(command.c_str(), NULL, 0, NULL);
-					command = mcicommand(song, "c", volume); //returns the command value to that of playing songs because we use it a lot everywhere else
-					break;
+					if (tempvolume <= 10 && tempvolume >= 0) {
+						intvolume = tempvolume * 100;
+						volume = to_string(intvolume); //this makes the value from an int to a string after multyplying it to 100 so it is balanced of the range of 0 to 1000
+						cout << "volume = " << volume << endl; //debug to show the current volume
+						command = mcicommand(song, "v", volume); //send the volume value to the command function to return us a new command to use in mcisendstring
+						mciSendString(command.c_str(), NULL, 0, NULL);
+						command = mcicommand(song, "c", volume); //returns the command value to that of playing songs because we use it a lot everywhere else
+						break;
+					}
+					else {
+						cout << "Please enter a value inbetween 0 and 10" << endl;
+						break;
+					}
 
 				case 2:
 					wcontroller = false;
@@ -674,21 +696,6 @@ int main() {
 			break;
 
 
-		case 4: //pause
-
-			//uses the mcisendstring command pause to pause the song
-
-			mciSendString("pause song", NULL, 0, NULL);
-			t2 = time(nullptr);
-			previous_pause_time += t2 - t1;
-			break;
-		case 5: //resume
-
-			//uses the mcisendstring command resume to resume the song
-
-			mciSendString("resume song", NULL, 0, NULL);
-			t1 = time(nullptr);
-			break;
 		case 6: //next
 
 			/*
@@ -737,15 +744,7 @@ int main() {
 			}
 			break;
 
-		case 10: //exit
-
-			//exits the program
-
-			mciSendString("close song", NULL, 0, NULL);
-			exit(0);
-			break;
-
-		case 11:
+		case 10:
 			//search for song in playlist.
 			cout << "Enter the name of the song you want to search for: ";
 			//search with spaces!
@@ -776,6 +775,14 @@ int main() {
 				break;
 			}
 
+			break;
+
+		case 11: //exit
+
+			//exits the program
+
+			mciSendString("close song", NULL, 0, NULL);
+			exit(0);
 			break;
 
 		default:

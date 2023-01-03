@@ -10,10 +10,10 @@
 using namespace std;
 namespace fs = std::filesystem;
 
-namespace fywauv {
+namespace tum {
 
 
-	//a class that imitates a vector for strings using a dynamic array with push, pop, size, delete clear and print functions because the vector library isn't allowed :/
+	//a struct that imitates a vector for strings using a dynamic array with push, pop, size, delete clear and print functions because the vector library isn't allowed :/
 	struct vector
 	{
 		//struct variables
@@ -170,8 +170,8 @@ int loginfunction() { //simple login function
 
 
 	bool login = true;
-	string users[] = { "ahmed", "youssef", "omar", "mazen" }; //the two arrays where we have the passwords and usernames saved
-	string passwords[] = { "pass1", "pass2", "pass3", "pass4" };
+	string users[] = { "ahmed", "youssef", "omar", "mazen", "kareem" }; //the two arrays where we have the passwords and usernames saved
+	string passwords[] = { "pass1", "pass2", "pass3", "pass4" , "pass5" };
 	string passenter;
 	string userenter;
 	int attempts = 0;
@@ -239,7 +239,7 @@ int loginfunction() { //simple login function
 
 }
 
-void listsongs(fywauv::vector& songs, string path, fywauv::vector& itemlist) { //this function is very important, it is the function we use to read the files in the folders
+void listsongs(tum::vector& songs, string path, tum::vector& itemlist) { //this function is very important, it is the function we use to read the files in the folders
 
 	//This was made by Ahmed for further questions but I will be writing the commends to explain it here for now -Mazen
 
@@ -276,7 +276,7 @@ void listsongs(fywauv::vector& songs, string path, fywauv::vector& itemlist) { /
 }
 
 
-void listplaylist(fywauv::vector& playlist, string extpath, int ipath, fywauv::vector& itemlist) { //I will be using this to controll the playlist
+void listplaylist(tum::vector& playlist, string extpath, int ipath, tum::vector& itemlist) { //I will be using this to controll the playlist
 
 
 	//This was made by Mazen for further questions
@@ -300,8 +300,8 @@ void listplaylist(fywauv::vector& playlist, string extpath, int ipath, fywauv::v
 	bool whilecontroller = true; //this bool value will be used to exist the while loops inside the playlist controller since I am too lazy to figure out how to break it otherwise
 	int switchcontroller;
 	string path;
-	fywauv::vector controller;
-	fywauv::vector additemlist;
+	tum::vector controller;
+	tum::vector additemlist;
 
 
 	/*________________________________The Playlist controller________________________________*/
@@ -322,7 +322,7 @@ void listplaylist(fywauv::vector& playlist, string extpath, int ipath, fywauv::v
 				playlist.clear(); //this clears the two vectors playlist and itemlist
 				itemlist.clear();
 				cout << "enter the path to the new folder" << ":";
-				cin >> path;
+				getline(cin, path);
 				cout << "\n\n\n";
 				listsongs(playlist, path, itemlist); //this changes adds all the items in the new folder to the playlist
 				cout << "\n\n\n";
@@ -330,8 +330,10 @@ void listplaylist(fywauv::vector& playlist, string extpath, int ipath, fywauv::v
 
 
 			case 2: //add a new track to the playlist
-				cout << "Pick the folder with tracks you wish to add" << endl;
-				cin >> path;
+				cout << "Pick the folder with tracks you wish to add: ";
+				getline(cin, path);
+				cout << "\n";
+
 				for (const auto& entry : fs::directory_iterator(path)) {
 
 					string item = entry.path().string(); //refer to the listsongs function to know how this works
@@ -348,7 +350,7 @@ void listplaylist(fywauv::vector& playlist, string extpath, int ipath, fywauv::v
 
 					}
 				}
-				cout << "current controller playlist" << endl; //shows you the current items in the folder you are picking from
+				cout << "Songs in the folder: " << endl; //shows you the current items in the folder you are picking from
 				for (int i = 0; i < additemlist.getsize(); i++) {
 					cout << i + 1 << "- " << additemlist.get(i) << endl;
 
@@ -376,7 +378,7 @@ void listplaylist(fywauv::vector& playlist, string extpath, int ipath, fywauv::v
 							cout << i + 1 << "- " << itemlist.get(i) << endl;
 						}
 
-						controller.clear(); //clears the temporary vectors
+						controller.clear(); //clears the temporary vectors and uses delete [] on them inside the vector struct
 						additemlist.clear();
 
 						break;
@@ -409,6 +411,8 @@ void listplaylist(fywauv::vector& playlist, string extpath, int ipath, fywauv::v
 
 
 					case 3: //exits the loop
+						controller.clear(); //clears the arrays and deletes the arrays using delete []
+						additemlist.clear();
 						whilecontroller = false;
 						break;
 
@@ -495,7 +499,6 @@ string mcicommand(string path, string voc, string volume) {
 		int found = command.find_last_of(" ");
 		command = command.substr(0, found) + " " + volume;
 
-		cout << command << endl;
 		return command;
 	}
 
@@ -517,18 +520,19 @@ int main() {
 
 	int controller;
 	int vcontroller;
+	int seek;
 	bool wcontroller = true;
-	string volume;
-	int intvolume;
+	string volume = "500";
+	int intvolume = 500;
 	stringstream iv;
 	string command;
 	time_t t1{}, t2{}, previous_pause_time = 0; //this is a timer saver for when we pause a song
 	float tempvolume;
 	string search;
 	string search2;
-	fywauv::vector playlist;  //the playlist including all the paths to the songs we use
-	fywauv::vector itemlist; //the itemlist which includes all the song names we use
-	fywauv::vector searchlist;
+	tum::vector playlist;  //the playlist including all the paths to the songs we use
+	tum::vector itemlist; //the itemlist which includes all the song names we use
+	tum::vector searchlist;
 	int searchnum;
 	bool searchcontroller = true;
 	/*_________________________________ LOGIN FUNTION _________________________________*/
@@ -540,7 +544,7 @@ int main() {
 
 	string ogpath;
 	cout << "\n\nselect your music folder using path: ";
-	cin >> ogpath; //asks for the first path to the starting folder
+	getline(cin, ogpath); //asks for the first path to the starting folder
 	cout << endl;
 
 	/*_______________________ Playlist initilaization _______________________*/
@@ -550,42 +554,40 @@ int main() {
 	listplaylist(playlist, ogpath, 0, itemlist); // we put 0 in the third parameter to use the first time initilization for the playlist
 
 
-
-	/*______________________________ PATHS___________________________*/
-
-	//add a second backslash to all paths to avoid errors (no longer needed but kept just incase will probably be replaced with the fix to the sapce issue)
-
-
-	cout << "Output of vector:\n\n";
-	for (int i = 0; i < playlist.getsize(); ++i) {
-		cout << playlist.get(i) << " " << endl;
-	}
-
-	cout << "AND SIZE IS..." << playlist.getsize() << endl;
-
 	/*______________________________CHOOSE SONG___________________________*/
 
 
 	/*
 	* this is the function for choosing which song to play first from the given playlist at the start
 	*/
-
-
 	int songnum;
-	cout << "\n\nenter song number: ";
-	cin >> songnum;
+	songnum = 1;
+	string song;
+	song = playlist.get(songnum);
 
-	if (songnum > playlist.getsize()) {
-		cout << "song number not found, track 1 chosen";
+	if (playlist.getsize() == 0) {
+		cout << "\n\nyou entered a path with no songs, entering the program with no playlist you can use edit playlist to add songs \n\n";
 		songnum = 1;
+
+	}
+	else {
+		cout << "\n\nenter song number: ";
+		cin >> songnum;
+
+		if (songnum > playlist.getsize()) {
+			cout << "song number not found, track 1 chosen";
+			songnum = 1;
+		}
+
+		songnum = songnum - 1;
+
+		song = playlist.get(songnum);
+
+
+		cout << "YOU CHOSE :   " << itemlist.get(songnum) << endl;
 	}
 
-	songnum = songnum - 1;
 
-	string song = playlist.get(songnum);
-
-
-	cout << "YOU CHOSE :   " << TEXT(song.c_str()) << endl;
 
 	/*------------------------------PATH TO COMMAND--------------------------*/
 
@@ -593,8 +595,8 @@ int main() {
 	* this is the first time initiliazing the command function in int main() with the song you choose to be the first one to run
 	*/
 
-	command = mcicommand(song, "c", "500");
-	cout << command;
+	command = mcicommand(song, "c", volume);
+
 
 
 	/*------------------------------------------CONTROLS---------------------------------------------*/
@@ -604,16 +606,19 @@ int main() {
 	*/
 
 	mciSendString(command.c_str(), NULL, 0, NULL);
+	command = mcicommand(song, "v", volume); //send the volume value to the command function to return us a new command to use in mcisendstring
+	mciSendString(command.c_str(), NULL, 0, NULL);
+	command = mcicommand(song, "c", volume);
 
 
 	while (true) {
 
 		//an infinite function that has one exit, this function will be the responsible to full controls of the program
 
-		cout << "\n\n\n\n" << " 1-  Play\n 2-  Stop\n 3-  Volume Controls \n 4-  Pause \n 5-  Resume \n 6-  Next \n 7-  Previous \n 8-  Edit Playlist \n 9-  Show playlist \n 10- Exit \n11- Search \n\n\n" << endl;
+		cout << "\n\n\n" << " 1-  Play\n 2-  Stop \n 3-  Pause \n 4-  Resume \n 5-  Volume Controls \n 6-  Next \n 7-  Previous \n 8-  Edit Playlist \n 9-  Show playlist \n 10- Seek \n 11- Search \n 12- Exit \n\n\n" << endl;
 		cout << "enter your choice: ";
 		cin >> controller; //chooses which switch case we will be running
-
+		cout << "\n\n";
 
 		switch (controller) {
 		case 1: //play
@@ -621,11 +626,10 @@ int main() {
 			//once a song is opened using the command function you don't have to call the command function unless you are changing it
 			//therefore the play function is just the play command with the alias which is song
 
-			mciSendString("play song", NULL, 0, NULL);
+			mciSendString("play song repeat", NULL, 0, NULL);
 			t1 = time(nullptr);
 
-			cout << "Playing...: " << TEXT(song.c_str()) << endl;
-			cout << "Command used...:" << command << endl;
+			cout << "\nPlaying...: " << itemlist.get(songnum) << endl << endl;
 
 			break;
 		case 2: //stop
@@ -634,8 +638,30 @@ int main() {
 
 			mciSendString("close song", NULL, 0, NULL); //closes the song
 			mciSendString(command.c_str(), NULL, 0, NULL); //opens it from the start with the command function
+			command = mcicommand(song, "v", volume); //send the volume value to the command function to return us a new command to use in mcisendstring
+			mciSendString(command.c_str(), NULL, 0, NULL);
+			command = mcicommand(song, "c", volume);
+			cout << "\nStopping...: " << itemlist.get(songnum) << endl << endl;
 			break;
-		case 3: //controls the volume
+
+		case 3: //pause
+
+			//uses the mcisendstring command pause to pause the song
+
+			mciSendString("pause song", NULL, 0, NULL);
+			t2 = time(nullptr);
+			previous_pause_time += t2 - t1;
+			cout << "\nPausing...:" << itemlist.get(songnum) << endl << endl;
+			break;
+		case 4: //resume
+
+			//uses the mcisendstring command resume to resume the song
+
+			mciSendString("resume song", NULL, 0, NULL);
+			t1 = time(nullptr);
+			cout << "\nResuming...:" << itemlist.get(songnum) << endl << endl;
+			break;
+		case 5: //controls the volume
 
 			/*
 			* this will be the case responsible of controlling the volume using the setaudo volume to function of mcisendstring
@@ -644,20 +670,33 @@ int main() {
 			*/
 
 			while (wcontroller) {
+
+				cout << "\n\nCurrent audio: " << intvolume / 100 << "\n\n";
+
 				cout << "\n 1- Control volume\n 2- Exit Volume Controls\n";
+
+				cout << "\npick an option: ";
 				cin >> vcontroller;
+				cout << "\n\n";
 				switch (vcontroller) {
 
 				case 1:
 					cout << "enter your desire volume from 0 to 10, default value 5\n";
+
 					cin >> tempvolume; //takes in the value of the volume as a float
-					intvolume = tempvolume * 100;
-					volume = to_string(intvolume); //this makes the value from an int to a string after multyplying it to 100 so it is balanced of the range of 0 to 1000
-					cout << "volume = " << volume << endl; //debug to show the current volume
-					command = mcicommand(song, "v", volume); //send the volume value to the command function to return us a new command to use in mcisendstring
-					mciSendString(command.c_str(), NULL, 0, NULL);
-					command = mcicommand(song, "c", volume); //returns the command value to that of playing songs because we use it a lot everywhere else
-					break;
+					if (tempvolume <= 10 && tempvolume >= 0) {
+						intvolume = tempvolume * 100;
+						volume = to_string(intvolume); //this makes the value from an int to a string after multyplying it to 100 so it is balanced of the range of 0 to 1000
+						command = mcicommand(song, "v", volume); //send the volume value to the command function to return us a new command to use in mcisendstring
+						mciSendString(command.c_str(), NULL, 0, NULL);
+						command = mcicommand(song, "c", volume); //returns the command value to that of playing songs because we use it a lot everywhere else
+						break;
+
+					}
+					else {
+						cout << "Please enter a value inbetween 0 and 10" << endl;
+						break;
+					}
 
 				case 2:
 					wcontroller = false;
@@ -674,21 +713,6 @@ int main() {
 			break;
 
 
-		case 4: //pause
-
-			//uses the mcisendstring command pause to pause the song
-
-			mciSendString("pause song", NULL, 0, NULL);
-			t2 = time(nullptr);
-			previous_pause_time += t2 - t1;
-			break;
-		case 5: //resume
-
-			//uses the mcisendstring command resume to resume the song
-
-			mciSendString("resume song", NULL, 0, NULL);
-			t1 = time(nullptr);
-			break;
 		case 6: //next
 
 			/*
@@ -705,7 +729,12 @@ int main() {
 			song = playlist.get(songnum); //this changes song which is a value holding a path from the old song to the path of the new song
 			command = mcicommand(song, "c", volume); //send back the new path to the function command to make us the new command to use in mcisend string
 			mciSendString(command.c_str(), NULL, 0, NULL); //opens the new song using the command made in the previous line
-			mciSendString("play song", NULL, 0, NULL); //starts playing the new song
+			command = mcicommand(song, "v", volume); //send the volume value to the command function to return us a new command to use in mcisendstring
+			mciSendString(command.c_str(), NULL, 0, NULL);
+			command = mcicommand(song, "c", volume);
+			mciSendString("play song repeat", NULL, 0, NULL); //starts playing the new song
+			cout << "\nPlaying...: " << itemlist.get(songnum) << endl << endl;
+
 			break;
 		case 7: //previous
 
@@ -719,7 +748,12 @@ int main() {
 			song = playlist.get(songnum);
 			command = mcicommand(song, "c", volume);
 			mciSendString(command.c_str(), NULL, 0, NULL);
-			mciSendString("play song", NULL, 0, NULL);
+			command = mcicommand(song, "v", volume); //send the volume value to the command function to return us a new command to use in mcisendstring
+			mciSendString(command.c_str(), NULL, 0, NULL);
+			command = mcicommand(song, "c", volume);
+			mciSendString("play song repeat", NULL, 0, NULL);
+			cout << "\nPlaying...: " << itemlist.get(songnum) << endl << endl;
+
 			break;
 		case 8: //Playlist control
 
@@ -737,13 +771,35 @@ int main() {
 			}
 			break;
 
-		case 10: //exit
 
-			//exits the program
+		case 10: //Seek
+			while (wcontroller) {
+				for (int i = 0; i < itemlist.getsize(); i++) {
+					cout << i + 1 << "- " << itemlist.get(i) << endl;
+				}
+				cout << "Choose a song to jump to:  ";
+				cin >> seek;
+				if (seek > itemlist.getsize()) {
+					cout << "item doesn't exist in the playlist please try again\n\n";
+				}
+				else {
+					mciSendString("close song", NULL, 0, NULL); //first it closes the song we are playing right now
+					songnum = seek - 1; //second it changes the songnum value increasing it by one 
+					song = playlist.get(songnum); //this changes song which is a value holding a path from the old song to the path of the new song
+					command = mcicommand(song, "c", volume); //send back the new path to the function command to make us the new command to use in mcisend string
+					mciSendString(command.c_str(), NULL, 0, NULL); //opens the new song using the command made in the previous line
+					command = mcicommand(song, "v", volume); //send the volume value to the command function to return us a new command to use in mcisendstring
+					mciSendString(command.c_str(), NULL, 0, NULL);
+					command = mcicommand(song, "c", volume);
+					mciSendString("play song repeat", NULL, 0, NULL); //starts playing the new song
+					wcontroller = false;
+					break;
 
-			mciSendString("close song", NULL, 0, NULL);
-			exit(0);
+				}
+			}
+			wcontroller = true;
 			break;
+
 
 		case 11:
 			//search for song in playlist.
@@ -772,10 +828,25 @@ int main() {
 				song = playlist.get(songnum);
 				command = mcicommand(song, "c", volume);
 				mciSendString(command.c_str(), NULL, 0, NULL);
-				mciSendString("play song", NULL, 0, NULL);
+				command = mcicommand(song, "v", volume); //send the volume value to the command function to return us a new command to use in mcisendstring
+				mciSendString(command.c_str(), NULL, 0, NULL);
+				command = mcicommand(song, "c", volume);
+				mciSendString("play song repeat", NULL, 0, NULL);
 				break;
 			}
 
+			break;
+
+		case 12: //exit
+
+			//exits the program
+
+			mciSendString("close song", NULL, 0, NULL);
+			itemlist.clear(); //clears the memeory before closing the program
+			playlist.clear();
+			searchlist.clear();
+
+			exit(0);
 			break;
 
 		default:
